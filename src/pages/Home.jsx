@@ -1,9 +1,9 @@
 import Button from "../components/Button";
+import heroYellow from "../assets/images/hero/hero_yellow.svg";
 
 export default function Home() {
   return (
     <main className="main-container py-5">
-      {/* SECTION 1: HERO CONTAINER */}
       <section className="flex gap-[24px] mb-[24px]">
         {/* Left Content Block - 720x530 */}
         <div className="w-[720px] h-[530px] bg-[#F8F8F8] rounded-[30px] px-[64px] py-[98px] flex flex-col justify-center">
@@ -30,24 +30,22 @@ export default function Home() {
           />
         </div>
 
-        {/* Right Image Block - 568x530 */}
         <div className="w-[568px] h-[530px] rounded-[30px] overflow-hidden">
           <img
-            src="/src/assets/images/hero/hero_yellow.svg"
+            src={heroYellow}
             alt="Language Tutor"
             className="w-full h-full object-cover"
           />
         </div>
       </section>
 
-      {/* SECTION 2: STATISTICS BAR */}
       <section
         className="mt-[24px] w-[1312px] h-[116px] rounded-[30px] flex items-center justify-center"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg width='100%2d' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='%23F4C550' stroke-width='3' stroke-dasharray='10%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`,
         }}
       >
-        {/* Inner container 1067px */}
+
         <div className="w-[1067px] h-9 flex justify-between items-center">
           {/* Stat 1 */}
           <div className="w-[217px] flex items-center gap-4">
@@ -59,7 +57,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Stat 2 */}
           <div className="w-[232px] flex items-center gap-[16px]">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               300,000 +
@@ -69,7 +66,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Stat 3 */}
           <div className="w-[159px] flex items-center gap-[16px]">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               120 +
@@ -79,7 +75,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Stat 4 */}
           <div className="w-[159px] flex items-center gap-[16px]">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               200 +
