@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import heroYellow from "../assets/images/hero/hero_yellow.svg";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <main className="main-container py-5">
       <section className="flex gap-[24px] mb-[24px]">
@@ -26,6 +29,7 @@ export default function Home() {
             bg="bg-brand-yellow"
             btnText="Get started"
             className="mt-16"
+            onClick={() => navigate("/teachers")}
           />
         </div>
 
