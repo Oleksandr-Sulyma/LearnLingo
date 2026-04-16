@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <main className="main-container py-5">
       <section className="flex gap-[24px] mb-[24px]">
-        {/* Left Content Block - 720x530 */}
         <div className="w-[720px] h-[530px] bg-[#F8F8F8] rounded-[30px] px-[64px] py-[98px] flex flex-col justify-center">
           <h1 className="text-[48px] font-medium leading-[1.16667] tracking-[-0.02em] text-[#121417] max-w-[548px]">
             Unlock your potential with the best{" "}
@@ -47,7 +46,6 @@ export default function Home() {
       >
 
         <div className="w-[1067px] h-9 flex justify-between items-center">
-          {/* Stat 1 */}
           <div className="w-[217px] flex items-center gap-4">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               32,000 +

@@ -1,10 +1,17 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import Modal from "./Modal";
+import LoginForm from "./Auth/LoginForm";
+import RegisterForm from "./Auth/RegisterForm";
 import Icon from "./Icon";
 import Button from "./Button";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const [modalType, setModalType] = useState(null);
+
+  const closeModal = () => setModalType(null);
 
   const navLinkStyles = ({ isActive }) =>
     `transition-colors hover:text-brand-yellow ${isActive ? "text-brand-yellow" : "text-gray-900"}`;
@@ -12,7 +19,6 @@ export default function Header() {
   return (
     <header className="py-5">
       <div className="header-container h-12 flex items-center justify-between">
-        {/* Logo - Width: 133px, Height: 28px */}
         <div className="flex justify-between w-165 h-7">
           <Link to="/" className="flex items-center gap-2 w-33.25 h-7">
             <Icon id="icon-logo" width="28" height="28" />
@@ -21,7 +27,6 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* Navigation */}
           <nav className="flex gap-7 font-normal text-base">
             <NavLink to="/" className={navLinkStyles}>
               Home
@@ -37,12 +42,10 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Auth Block */}
         <div className="flex items-center gap-4 font-bold">
           {!user ? (
             <>
-              {/* Button Log in */}
-              <button className="flex items-center gap-2 text-gray-900 hover:text-brand-yellow transition-colors">
+              <button onClick={() => setModalType("login")} className="flex items-center gap-2 text-gray-900 hover:text-brand-yellow transition-colors">
                 <Icon 
                   id="icon-login" 
                   width="20" 
@@ -52,19 +55,19 @@ export default function Header() {
                 <span className="group-hover:text-brand-yellow transition-colors">Log in</span>
               </button>
 
-              {/* Button Registration */}
               <Button
                 width="166px"
                 height="48px"
                 bg="bg-[#121417]"
                 textColor="text-[#fff]"
                 btnText="Registration"
+                onClick={() => setModalType("register")}
               />
             </>
           ) : (
             <div className="flex items-center gap-4 font-bold">
               <div className="flex items-center gap-4">
-                <span className="font-medium text-[#121417]">{user.email}</span>
+                <span className="font-medium text-[#121417]">{user.displayName}</span>
 
                 <button
                   onClick={logout}
@@ -83,6 +86,14 @@ export default function Header() {
           )}
         </div>
       </div>
+      {modalType && (
+        <Modal onClose={closeModal}>
+          {modalType === "login" 
+          ? <LoginForm onClose={closeModal} /> 
+          : <RegisterForm onClose={closeModal} /> 
+          }
+        </Modal>
+      )}
     </header>
   );
 }
