@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Тут ми потім додамо кольори з макету (наприклад, жовтий чи блакитний)
+        "brand-yellow": "#F4C550", 
+        "brand-yellow-light": "#FBE9BA", 
+        "brand-yellow-hover": "#FFD466", 
       },
     },
   },

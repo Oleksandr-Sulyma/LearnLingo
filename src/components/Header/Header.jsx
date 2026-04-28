@@ -1,20 +1,33 @@
 import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import Modal from "./Modal";
-import LoginForm from "./Auth/LoginForm";
-import RegisterForm from "./Auth/RegisterForm";
-import Icon from "./Icon";
-import Button from "./Button";
+import { useThemeStore } from "../../store/useThemeStore";
+import Modal from "../Modal/Modal";
+import LoginForm from "../Auth/LoginForm";
+import RegisterForm from "../Auth/RegisterForm";
+import Icon from "../Icon/Icon";
+import Button from "../Button/Button";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [modalType, setModalType] = useState(null);
+  
+  const { theme, setTheme } = useThemeStore();
 
   const closeModal = () => setModalType(null);
 
+  const themeOptions = [
+    { value: "yellow", label: "🟡" },
+    { value: "blue", label: "🔵" },
+    { value: "green", label: "🟢" },
+    { value: "pink", label: "🌸" },
+    { value: "orange", label: "🟠" },
+  ];
+
   const navLinkStyles = ({ isActive }) =>
-    `transition-colors hover:text-brand-yellow ${isActive ? "text-brand-yellow" : "text-gray-900"}`;
+    `transition-colors hover:text-[var(--brand-color)] ${
+      isActive ? "text-[var(--brand-color)]" : "text-gray-900"
+    }`;
 
   return (
     <header className="py-5">
@@ -45,14 +58,19 @@ export default function Header() {
         <div className="flex items-center gap-4 font-bold">
           {!user ? (
             <>
-              <button onClick={() => setModalType("login")} className="flex items-center gap-2 text-gray-900 hover:text-brand-yellow transition-colors">
-                <Icon 
-                  id="icon-login" 
-                  width="20" 
-                  height="20" 
-                  className="text-brand-yellow" 
+              <button
+                onClick={() => setModalType("login")}
+                className="flex items-center gap-2 text-gray-900 hover:text-[var(--brand-color)] transition-colors"
+              >
+                <Icon
+                  id="icon-login"
+                  width="20"
+                  height="20"
+                  className="text-[var(--brand-color)]"
                 />
-                <span className="group-hover:text-brand-yellow transition-colors">Log in</span>
+                <span className="group-hover:text-[var(--brand-color)] transition-colors">
+                  Log in
+                </span>
               </button>
 
               <Button
@@ -67,31 +85,47 @@ export default function Header() {
           ) : (
             <div className="flex items-center gap-4 font-bold">
               <div className="flex items-center gap-4">
-                <span className="font-medium text-[#121417]">{user.displayName}</span>
+                <span className="font-medium text-[#121417]">
+                  {user.displayName}
+                </span>
 
                 <button
                   onClick={logout}
-                  className="flex items-center gap-2 text-gray-900 hover:text-brand-yellow transition-colors"
+                  className="flex items-center gap-2 text-gray-900 hover:text-[var(--brand-color)] transition-colors"
                 >
                   <Icon
                     id="icon-logout"
                     width="20"
                     height="20"
-                    className="text-brand-yellow"
+                    className="text-[var(--brand-color)]"
                   />
-                  <span className="group-hover:text-brand-yellow transition-colors">Log out</span>
+                  <span className="group-hover:text-[var(--brand-color)] transition-colors">
+                    Log out
+                  </span>
                 </button>
               </div>
             </div>
           )}
+
+          <select 
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            className="bg-transparent cursor-pointer focus:outline-none text-xl ml-2"
+          >
+            {themeOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
         </div>
       </div>
+
       {modalType && (
         <Modal onClose={closeModal}>
-          {modalType === "login" 
-          ? <LoginForm onClose={closeModal} /> 
-          : <RegisterForm onClose={closeModal} /> 
-          }
+          {modalType === "login" ? (
+            <LoginForm onClose={closeModal} />
+          ) : (
+            <RegisterForm onClose={closeModal} />
+          )}
         </Modal>
       )}
     </header>

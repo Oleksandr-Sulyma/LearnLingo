@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import Icon from "./Icon";
-
+import Icon from "../Icon/Icon";
 
 export default function Modal({ children, onClose }) {
   const modalRoot = document.querySelector("#modal-root");
@@ -26,12 +25,12 @@ export default function Modal({ children, onClose }) {
   if (!modalRoot) return null;
 
   return createPortal(
-    <div 
+    <div
       className="fixed inset-0 bg-[rgba(18,23,23,0.5)] flex items-center justify-center z-[100]"
       onClick={handleBackdropClick}
     >
       <div className="relative bg-white w-[566px] min-h-[500px] rounded-[30px] p-[64px]">
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-[20px] right-[20px] text-[#121417] hover:rotate-90 transition-transform"
         >
@@ -40,6 +39,6 @@ export default function Modal({ children, onClose }) {
         {children}
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

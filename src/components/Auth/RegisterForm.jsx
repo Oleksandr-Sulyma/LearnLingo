@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../context/AuthContext";
-import Icon from "../Icon";
-import Button from "../Button";
+import Icon from "../Icon/Icon";
+import Button from "../Button/Button";
 
 const schema = yup
   .object({
@@ -111,7 +111,11 @@ export default function RegisterForm({ onClose }) {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute top-[17px] right-[17px] text-[#121417]"
             >
-              <Icon id={showPassword ? "icon-eye" : "icon-eye-off"} width="20" height="20" />
+              <Icon
+                id={showPassword ? "icon-eye" : "icon-eye-off"}
+                width="20"
+                height="20"
+              />
             </button>
           </div>
           {errors.password && (

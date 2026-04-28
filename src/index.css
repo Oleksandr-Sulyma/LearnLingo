@@ -20,13 +20,36 @@
   --font-roboto: "Roboto", sans-serif;
 }
 
-
-
 :root {
+  /* Основний колір активної теми */
+  --brand-color: var(--color-brand-yellow);
+  --brand-color-light: var(--color-brand-yellow-light);
+
   background-color: #ffffff;
   color: #121417;
   font-family: var(--font-roboto);
-  -webkit-font-smoothing: antialiased;
+}
+
+/* Перемикання тем */
+[data-theme="green"] { 
+  --brand-color: var(--color-brand-green); 
+  --brand-color-light: var(--color-brand-green-light);
+}
+[data-theme="blue"] { 
+  --brand-color: var(--color-brand-blue); 
+  --brand-color-light: var(--color-brand-blue-light);
+}
+[data-theme="pink"] { 
+  --brand-color: var(--color-brand-pink); 
+  --brand-color-light: var(--color-brand-pink-light);
+}
+[data-theme="orange"] { 
+  --brand-color: var(--color-brand-orange); 
+  --brand-color-light: var(--color-brand-orange-light);
+}
+[data-theme="yellow"] { 
+  --brand-color: var(--color-brand-yellow); 
+  --brand-color-light: var(--color-brand-yellow-light);
 }
 
 .main-container {

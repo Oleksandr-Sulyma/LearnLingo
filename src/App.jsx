@@ -1,10 +1,18 @@
 import { Routes, Route, Link } from 'react-router-dom';
-import Header from './components/Header';
+import { useThemeStore } from './store/useThemeStore';
+import { useEffect } from 'react';
+import Header from './components/Header/Header';
 import Home from './pages/Home';
 import Teachers from './pages/Teachers';
 import Favorites from './pages/Favorites';
 
 function App() {
+  const theme = useThemeStore((state) => state.theme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
     <div className="min-h-screen bg-white font-roboto">
       <Header />
