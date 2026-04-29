@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
 import { useFavoritesStore } from "../../store/useFavoritesStore";
+import { useFiltersStore } from "../../store/useFiltersStore";
 import { useAuth } from "../../context/AuthContext";
 import Modal from "../Modal/Modal";
 import BookingForm from "../BookingForm/BookingForm";
@@ -14,6 +15,7 @@ export default function TeacherCard({ teacher }) {
   const { user } = useAuth();
   const { favorites, toggleFavorite } = useFavoritesStore();
   const isFavorite = favorites.includes(teacher.id);
+  const selectedLevel = useFiltersStore((state) => state.level);
 
   const {
     name,
@@ -63,6 +65,7 @@ export default function TeacherCard({ teacher }) {
 
   return (
     <div className="animate-fade-in bg-white rounded-3xl p-6 flex gap-12 relative w-full font-['Roboto',sans-serif]">
+      {/* Avatar Section */}
       <div
         className="relative w-30 h-30 p-3 border rounded-full shrink-0 flex items-center justify-center"
         style={{ borderColor: "var(--brand-color-light)" }}
@@ -203,21 +206,25 @@ export default function TeacherCard({ teacher }) {
         )}
 
         <div className="flex flex-wrap gap-2 mt-8">
-          {levels.map((level, index) => (
-            <span
-              key={index}
-              className={`px-3 py-2 rounded-[15px] text-[14px] font-medium leading-[1.14] border transition-colors ${
-                index === 0
-                  ? "border-transparent"
-                  : "border-[rgba(18,20,23,0.2)] text-[#121417]"
-              }`}
-              style={
-                index === 0 ? { backgroundColor: "var(--brand-color)" } : {}
-              }
-            >
-              #{level}
-            </span>
-          ))}
+          {levels.map((lvl, index) => {
+            const isSelected = lvl === selectedLevel;
+
+            return (
+              <span
+                key={index}
+                className={`px-3 py-2 rounded-[15px] text-[14px] font-medium leading-[1.14] border transition-colors ${
+                  isSelected
+                    ? "border-transparent text-black" 
+                    : "border-[rgba(18,20,23,0.2)] text-[#121417]" 
+                }`}
+                style={
+                  isSelected ? { backgroundColor: "var(--brand-color)" } : {}
+                }
+              >
+                #{lvl}
+              </span>
+            );
+          })}
         </div>
 
         {isExpanded && (
@@ -233,6 +240,8 @@ export default function TeacherCard({ teacher }) {
           </div>
         )}
       </div>
+
+      {/* Modal Section */}
       <AnimatePresence>
         {isModalOpen && (
           <Modal onClose={closeModal} maxWidth="599px">
