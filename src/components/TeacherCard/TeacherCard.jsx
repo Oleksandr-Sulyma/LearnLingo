@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { useFavoritesStore } from "../../store/useFavoritesStore";
 import { useAuth } from "../../context/AuthContext";
+import Modal from "../Modal/Modal";
+import BookingForm from "../BookingForm/BookingForm";
 import Icon from "../Icon/Icon";
 import Button from "../Button/Button";
 
 export default function TeacherCard({ teacher }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
   const { favorites, toggleFavorite } = useFavoritesStore();
   const isFavorite = favorites.includes(teacher.id);
+  
 
   const {
     name,
@@ -34,6 +38,9 @@ export default function TeacherCard({ teacher }) {
 
     toggleFavorite(teacher.id);
   };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const Divider = () => (
     <Icon
@@ -211,11 +218,17 @@ export default function TeacherCard({ teacher }) {
               height="60px"
               bg="bg-[var(--brand-color)]" 
               className="text-[18px] font-bold transition-opacity hover:opacity-90"
-              onClick={() => console.log("Open booking modal")}
+              onClick={openModal}
             />
           </div>
         )}
       </div>
+
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <BookingForm teacher={teacher} onClose={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }

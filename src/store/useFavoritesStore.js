@@ -14,6 +14,8 @@ export const useFavoritesStore = create(
           return { favorites: [...state.favorites, teacherId] };
         }
       }),
+
+      clearFavorites: () => set({ favorites: [] }),
     }),
     {
       name: "favorites-storage", 

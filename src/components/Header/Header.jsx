@@ -6,13 +6,15 @@ import Modal from "../Modal/Modal";
 import LoginForm from "../Auth/LoginForm";
 import RegisterForm from "../Auth/RegisterForm";
 import Icon from "../Icon/Icon";
+import { useFavoritesStore } from "../../store/useFavoritesStore";
 import Button from "../Button/Button";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [modalType, setModalType] = useState(null);
-  
+
   const { theme, setTheme } = useThemeStore();
+  const { clearFavorites } = useFavoritesStore();
 
   const closeModal = () => setModalType(null);
 
@@ -28,6 +30,15 @@ export default function Header() {
     `transition-colors hover:text-[var(--brand-color)] ${
       isActive ? "text-[var(--brand-color)]" : "text-gray-900"
     }`;
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // виходимо з Firebase
+      clearFavorites(); // очищуємо Zustand стор
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <header className="py-5">
@@ -90,7 +101,7 @@ export default function Header() {
                 </span>
 
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="flex items-center gap-2 text-gray-900 hover:text-[var(--brand-color)] transition-colors"
                 >
                   <Icon
@@ -107,13 +118,15 @@ export default function Header() {
             </div>
           )}
 
-          <select 
+          <select
             value={theme}
             onChange={(e) => setTheme(e.target.value)}
             className="bg-transparent cursor-pointer focus:outline-none text-xl ml-2"
           >
-            {themeOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            {themeOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         </div>
