@@ -29,7 +29,8 @@ export const fetchTeachers = async (lastDoc = null, filters = {}) => {
     q = query(q, where("price_per_hour", "<=", Number(price)));
   }
 
-  q = query(q, limit(4));
+  q = query(q, limit(4)); 
+
   if (lastDoc) {
     q = query(q, startAfter(lastDoc));
   }

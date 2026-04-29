@@ -1,19 +1,24 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast"; 
-import { fetchTeachers, fetchAllTeachersForFilters } from "../firebase/database"; 
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import toast from "react-hot-toast";
+import { fetchTeachers, fetchAllTeachersForFilters } from "../firebase/database";
 import { useFiltersStore } from "../store/useFiltersStore";
 import TeacherCard from "../components/TeacherCard/TeacherCard";
 import TeacherSkeleton from "../components/TeacherCard/TeacherSkeleton";
 import TeacherFilters from "../components/TeacherFilters/TeacherFilters";
 
 export default function Teachers() {
-  const [teachers, setTeachers] = useState([]); 
+  const [teachers, setTeachers] = useState([]);
   const [allTeachersData, setAllTeachersData] = useState([]);
-  const [lastVisible, setLastVisible] = useState(null); 
+  const [lastVisible, setLastVisible] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
+  const [displayLimit, setDisplayLimit] = useState(4);
+
+  const isFetchingRef = useRef(false);
   const { language, level, price } = useFiltersStore();
+
+  const ITEMS_PER_PAGE = 4;
 
   useEffect(() => {
     const getFiltersData = async () => {
@@ -21,42 +26,89 @@ export default function Teachers() {
         const data = await fetchAllTeachersForFilters();
         setAllTeachersData(data);
       } catch (error) {
-        toast.error("Failed to load filter options.");
-        console.error("Metadata error:", error);
+        console.error(error);
       }
     };
     getFiltersData();
   }, []);
 
-  const loadData = async (isInitial = false) => {
-    if (isLoading) return;
-    setIsLoading(true);
+  const applyClientFilters = useCallback((data) => {
+    return data.filter((t) => !level || (t.levels && t.levels.includes(level)));
+  }, [level]);
 
-    try {
-      const currentCursor = isInitial ? null : lastVisible;
-      const result = await fetchTeachers(currentCursor, { language, level, price }); 
+ const loadData = async (isInitial = false) => {
+  if (isFetchingRef.current) return;
+  isFetchingRef.current = true;
+  setIsLoading(true);
+
+  let accumulatedTeachers = isInitial ? [] : [...teachers];
+  let currentCursor = isInitial ? null : lastVisible;
+  let isMoreInDb = true;
+
+  const currentFilteredCount = isInitial ? 0 : applyClientFilters(teachers).length;
+  const targetTotal = currentFilteredCount + ITEMS_PER_PAGE;
+
+  try {
+    while (true) {
+      const result = await fetchTeachers(currentCursor, { language, price });
       const newData = result?.data || [];
       const nextCursor = result?.lastVisible || null;
 
-      if (isInitial) {
-        setTeachers(newData);
-      } else {
-        setTeachers((prev) => [...prev, ...newData]);
+      if (newData.length === 0) {
+        isMoreInDb = false;
+        break;
       }
 
-      setLastVisible(nextCursor);
-      setHasMore(newData.length === 4); 
-    } catch (error) {
-      toast.error("Could not load teachers. Please try again later.");
-      console.error("Error loading teachers:", error);
-    } finally {
-      setIsLoading(false);
+      accumulatedTeachers = [...accumulatedTeachers, ...newData];
+      currentCursor = nextCursor;
+      
+      const filteredResults = applyClientFilters(accumulatedTeachers);
+
+      if (newData.length < 4) {
+        isMoreInDb = false;
+        break;
+      }
+
+      if (filteredResults.length >= targetTotal) {
+        const checkNext = await fetchTeachers(currentCursor, { language, price });
+        isMoreInDb = checkNext.data.length > 0;
+        break;
+      }
     }
-  };
+
+    setTeachers(accumulatedTeachers);
+    setLastVisible(currentCursor);
+    setHasMore(isMoreInDb);
+    setDisplayLimit(targetTotal);
+
+  } catch (error) {
+    toast.error("Could not load teachers.");
+    console.error(error);
+  } finally {
+    setIsLoading(false);
+    isFetchingRef.current = false;
+  }
+};
 
   useEffect(() => {
-    loadData(true);
-  }, [language, level, price]); 
+    setTeachers([]);
+    setLastVisible(null);
+    setHasMore(false);
+    setDisplayLimit(4);
+    
+    const timeoutId = setTimeout(() => loadData(true), 10);
+    return () => clearTimeout(timeoutId);
+  }, [language, price, level]);
+
+  const filteredTeachers = useMemo(() => {
+    const allFiltered = applyClientFilters(teachers);
+    return allFiltered.slice(0, displayLimit); 
+  }, [teachers, applyClientFilters, displayLimit]);
+
+  const canShowMore = useMemo(() => {
+    if (!hasMore) return false;
+    return true; 
+  }, [hasMore]);
 
   return (
     <main className="bg-[#F8F8F8] min-h-screen pb-24">
@@ -65,29 +117,25 @@ export default function Teachers() {
       </div>
 
       <div className="header-container flex flex-col items-center gap-8">
-        {teachers.length > 0 && teachers.map((teacher) => (
+        {filteredTeachers.map((teacher) => (
           <TeacherCard key={teacher.id} teacher={teacher} />
         ))}
 
         {isLoading && (
-          <>
+          <div className="w-full flex flex-col items-center gap-8">
             <TeacherSkeleton />
             <TeacherSkeleton />
-            <TeacherSkeleton />
-            <TeacherSkeleton />
-          </>
-        )}
-
-        {!isLoading && teachers.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-gray-500 text-lg">No teachers found matching your criteria.</p>
           </div>
         )}
 
-        {hasMore && !isLoading && teachers.length > 0 && (
+        {!isLoading && filteredTeachers.length === 0 && (
+          <p className="py-20 text-gray-500">No teachers found matching your criteria.</p>
+        )}
+
+        {hasMore && !isLoading && filteredTeachers.length > 0 && (
           <button
             onClick={() => loadData(false)}
-            className="mx-auto mt-16 px-12 py-4 bg-(--brand-color) rounded-xl text-[18px] font-bold transition-all hover:opacity-90 active:scale-95 disabled:opacity-50"
+            className="mx-auto mt-16 px-12 py-4 bg-(--brand-color) rounded-xl text-[18px] font-bold transition-all hover:opacity-90 active:scale-95"
           >
             Load more
           </button>
@@ -95,4 +143,4 @@ export default function Teachers() {
       </div>
     </main>
   );
-};
+}

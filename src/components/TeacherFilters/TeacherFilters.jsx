@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useFiltersStore } from "../../store/useFiltersStore";
 import FilterSelect from "./FilterSelect";
 
@@ -8,43 +8,42 @@ export default function TeacherFilters({ teachers }) {
   const price = useFiltersStore((state) => state.price);
   const setFilter = useFiltersStore((state) => state.setFilter);
 
-  const [languageOptions, setLanguageOptions] = useState([]);
-  const [levelOptions, setLevelOptions] = useState([]);
-
-  const pricesOptions = [
+  const pricesOptions = useMemo(() => [
     { value: null, label: "All" },
     { value: 10, label: "10" },
     { value: 20, label: "20" },
     { value: 30, label: "30" },
     { value: 40, label: "40" },
-  ];
+  ], []);
 
-  useEffect(() => {
-    if (!teachers || teachers.length === 0) {
-      setLanguageOptions([{ value: null, label: "All" }]);
-      setLevelOptions([{ value: null, label: "All" }]);
-      return;
-    }
+  const languageOptions = useMemo(() => {
+    if (!teachers || teachers.length === 0) return [{ value: null, label: "All" }];
 
     const languages = [...new Set(teachers.flatMap((t) => t.languages || []))]
       .filter(Boolean)
       .sort();
-    setLanguageOptions([
+
+    return [
       { value: null, label: "All" },
       ...languages.map((lang) => ({ value: lang, label: lang })),
-    ]);
+    ];
+  }, [teachers]);
+
+  const levelOptions = useMemo(() => {
+    if (!teachers || teachers.length === 0) return [{ value: null, label: "All" }];
 
     const levels = [...new Set(teachers.flatMap((t) => t.levels || []))]
       .filter(Boolean)
       .sort();
-    setLevelOptions([
+
+    return [
       { value: null, label: "All" },
-      ...levels.map((level) => ({ value: level, label: level })),
-    ]);
+      ...levels.map((lvl) => ({ value: lvl, label: lvl })),
+    ];
   }, [teachers]);
 
   return (
-    <div className=" py-8 flex gap-5 relative w-full font-['Roboto',sans-serif]">
+    <div className="py-8 flex gap-5 relative w-full font-['Roboto',sans-serif]">
       <FilterSelect
         options={languageOptions}
         label="Languages"
@@ -59,7 +58,6 @@ export default function TeacherFilters({ teachers }) {
         onChange={(option) => setFilter("level", option?.value || null)}
         value={level}
       />
-
       <FilterSelect
         options={pricesOptions}
         label="Price"
