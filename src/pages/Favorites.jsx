@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useFavoritesStore } from "../store/useFavoritesStore";
 import { fetchAllTeachersForFilters } from "../firebase/database";
 import TeacherCard from "../components/TeacherCard/TeacherCard";
+import TeacherSkeleton from "../components/TeacherCard/TeacherSkeleton";
 
 export default function Favorites() {
   const favorites = useFavoritesStore((state) => state.favorites);
-  
   const [favoriteTeachers, setFavoriteTeachers] = useState([]); 
   const [visibleCount, setVisibleCount] = useState(4); 
   const [isLoading, setIsLoading] = useState(false);
@@ -39,24 +39,31 @@ export default function Favorites() {
     <main className="bg-[#F8F8F8] min-h-screen pb-24 pt-10">
       <div className="header-container flex flex-col items-center gap-8">
         
-        {visibleTeachers.length > 0 ? (
-          visibleTeachers.map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))
-        ) : (
-          !isLoading && (
-            <div className="py-20 text-center">
-              <p className="text-[20px] font-medium text-[#121417]">
-                Your favorites list is empty.
-              </p>
-            </div>
-          )
+        {!isLoading && visibleTeachers.length > 0 && visibleTeachers.map((teacher) => (
+          <TeacherCard key={teacher.id} teacher={teacher} />
+        ))}
+
+        {isLoading && (
+          <>
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+          </>
+        )}      
+
+        {!isLoading && favorites.length === 0 && (
+          <div className="py-20 text-center">
+            <p className="text-[20px] font-medium text-[#121417]">
+              Your favorites list is empty.
+            </p>
+          </div>
         )}
 
         {hasMore && !isLoading && (
           <button
             onClick={() => setVisibleCount((prev) => prev + 4)}
-            className="mx-auto mt-16 px-12 py-4 bg-[var(--brand-color)] rounded-[12px] text-[18px] font-bold transition-all hover:bg-[var(--brand-color-light)] active:scale-95"
+            className="mx-auto mt-16 px-12 py-4 bg-(--brand-color) rounded-3 text-[18px] font-bold transition-all hover:bg-(--brand-color-light) active:scale-95"
           >
             Load more
           </button>

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast"; 
 import { fetchTeachers, fetchAllTeachersForFilters } from "../firebase/database"; 
 import { useFiltersStore } from "../store/useFiltersStore";
 import TeacherCard from "../components/TeacherCard/TeacherCard";
+import TeacherSkeleton from "../components/TeacherCard/TeacherSkeleton";
 import TeacherFilters from "../components/TeacherFilters/TeacherFilters";
 
 export default function Teachers() {
@@ -19,7 +21,8 @@ export default function Teachers() {
         const data = await fetchAllTeachersForFilters();
         setAllTeachersData(data);
       } catch (error) {
-        console.error("Помилка завантаження метаданих:", error);
+        toast.error("Failed to load filter options.");
+        console.error("Metadata error:", error);
       }
     };
     getFiltersData();
@@ -44,6 +47,7 @@ export default function Teachers() {
       setLastVisible(nextCursor);
       setHasMore(newData.length === 4); 
     } catch (error) {
+      toast.error("Could not load teachers. Please try again later.");
       console.error("Error loading teachers:", error);
     } finally {
       setIsLoading(false);
@@ -54,11 +58,6 @@ export default function Teachers() {
     loadData(true);
   }, [language, level, price]); 
 
-  const filteredTeachers = teachers.filter((t) => {
-  const matchLvl = !level || t.levels.includes(level);
-  return matchLvl;
-});
-
   return (
     <main className="bg-[#F8F8F8] min-h-screen pb-24">
       <div className="header-container">
@@ -66,24 +65,33 @@ export default function Teachers() {
       </div>
 
       <div className="header-container flex flex-col items-center gap-8">
-        {teachers.length > 0 ? (
-          teachers.map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))
-        ) : (
-          !isLoading && <p className="py-20 text-gray-500">No teachers found matching your criteria.</p>
+        {teachers.length > 0 && teachers.map((teacher) => (
+          <TeacherCard key={teacher.id} teacher={teacher} />
+        ))}
+
+        {isLoading && (
+          <>
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+            <TeacherSkeleton />
+          </>
         )}
 
-        {hasMore && !isLoading && (
+        {!isLoading && teachers.length === 0 && (
+          <div className="py-20 text-center">
+            <p className="text-gray-500 text-lg">No teachers found matching your criteria.</p>
+          </div>
+        )}
+
+        {hasMore && !isLoading && teachers.length > 0 && (
           <button
             onClick={() => loadData(false)}
-            className="mx-auto mt-16 px-12 py-4 bg-[var(--brand-color)] rounded-[12px] text-[18px] font-bold transition-all hover:bg-[var(--brand-color-light)] active:scale-95 disabled:opacity-50"
+            className="mx-auto mt-16 px-12 py-4 bg-(--brand-color) rounded-xl text-[18px] font-bold transition-all hover:opacity-90 active:scale-95 disabled:opacity-50"
           >
             Load more
           </button>
         )}
-        
-        {isLoading && <p className="italic py-10">Loading...</p>}
       </div>
     </main>
   );

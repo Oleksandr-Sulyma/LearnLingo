@@ -78,7 +78,7 @@ const DropdownIndicator = (props) => {
   return (
     <div
     {...props.innerProps}
-      className="flex items-center justify-center pr-[18px]"
+      className="flex items-center justify-center pr-4.5"
       style={{
         transform: props.selectProps.menuIsOpen ? "rotate(180deg)" : "rotate(0deg)",
         transition: "transform 0.2s ease-in-out",

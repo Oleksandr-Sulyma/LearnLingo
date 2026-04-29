@@ -1,16 +1,36 @@
-# React + Vite
+# 🌍 LearnLingo — Language Tutor Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LearnLingo is a professional web application designed for finding and booking language tutors. It offers a seamless user experience with dynamic personalization.
 
-Currently, two official plugins are available:
+## 🚀 [Live Demo](https://learn-lingo-liard.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📝 Technical Requirements (TZ) Compliance
+- **Auth**: Fully implemented via Firebase (Registration, Login, Persistent Sessions).
+- **Database**: Tutors data stored in Firebase Realtime Database.
+- **Filtering**: Advanced filtering by language, student level, and hourly rate.
+- **Favorites**: Private page for authorized users with localStorage persistence.
+- **Booking**: Multi-step validation form using React Hook Form & Yup.
+- **Pagination**: "Load more" functionality for optimized data fetching.
 
-## React Compiler
+## ✨ Features
+- **Dynamic Themes**: 5 unique color schemes (Yellow, Blue, Green, Pink, Orange).
+- **Responsive Design**: Mobile-first approach, fully adaptive UI.
+- **Custom UI Components**: Reusable buttons, icons (SVG sprites), and modal windows.
+- **UX Excellence**: Toast notifications for all key actions and skeleton loaders.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
+- **Core**: React 18, Vite.
+- **Styles**: Tailwind CSS v4.
+- **State**: Zustand (with Persist).
+- **Backend**: Firebase (Auth, Firestore, Realtime DB).
+- **Forms**: React Hook Form + Yup.
+- **UX**: React Hot Toast.
 
-## Expanding the ESLint configuration
+## 📦 Installation
+1. Clone the repo.
+2. Run `npm install`.
+3. Create `.env` and fill in your Firebase config (see example below).
+4. Run `npm run dev`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+*Created as a part of the GoIT educational program.*

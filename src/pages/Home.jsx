@@ -30,9 +30,9 @@ export default function Home() {
 
   return (
     <main className="main-container py-5">
-      <section className="flex gap-[24px] mb-[24px]">
-        <div className="w-[720px] h-[530px] bg-[#F8F8F8] rounded-[30px] px-[64px] py-[98px] flex flex-col justify-center">
-          <h1 className="text-[48px] font-medium leading-[1.16667] tracking-[-0.02em] text-[#121417] max-w-[548px]">
+      <section className="flex gap-6 mb-6">
+        <div className="w-180 h-132.5 bg-[#F8F8F8] rounded-[30px] px-16 py-24.5 flex flex-col justify-center">
+          <h1 className="text-[48px] font-medium leading-[1.16667] tracking-[-0.02em] text-[#121417] max-w-137">
             Unlock your potential with the best{" "}
             <span 
               className="italic font-normal rounded-md px-1"
@@ -43,7 +43,7 @@ export default function Home() {
             tutors
           </h1>
 
-          <p className="mt-8 text-[16px] leading-[1.375] tracking-[-0.02em] text-[#121417] max-w-[471px]">
+          <p className="mt-8 text-[16px] leading-snug tracking-[-0.02em] text-[#121417] max-w-117.75">
             Embark on an Exciting Language Journey with Expert Language Tutors:
             Elevate your language proficiency to new heights by connecting with
             highly qualified and experienced tutors.
@@ -59,7 +59,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="w-[568px] h-[530px] rounded-[30px] overflow-hidden">
+        <div className="w-142 h-132.5 rounded-[30px] overflow-hidden">
           <img
             src={heroImages[theme] || heroYellow}
             alt="Language Tutor"
@@ -69,13 +69,13 @@ export default function Home() {
       </section>
 
       <section
-        className="mt-[24px] w-[1312px] h-[116px] rounded-[30px] flex items-center justify-center"
+        className="mt-6 w-328 h-29 rounded-[30px] flex items-center justify-center"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='${currentStrokeColor}' stroke-width='3' stroke-dasharray='10%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`,
         }}
       >
-        <div className="w-[1067px] h-9 flex justify-between items-center">
-          <div className="w-[217px] flex items-center gap-4">
+        <div className="w-266.75 h-9 flex justify-between items-center">
+          <div className="w-54.25 flex items-center gap-4">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               32,000 +
             </span>
@@ -84,29 +84,29 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="w-[232px] flex items-center gap-[16px]">
+          <div className="w-58 flex items-center gap-4">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               300,000 +
             </span>
-            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-[80px]">
+            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-20">
               5-star tutor reviews
             </p>
           </div>
 
-          <div className="w-[159px] flex items-center gap-[16px]">
+          <div className="w-39.75 flex items-center gap-4">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               120 +
             </span>
-            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-[76px]">
+            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-19">
               Subjects taught
             </p>
           </div>
 
-          <div className="w-[159px] flex items-center gap-[16px]">
+          <div className="w-39.75 flex items-center gap-4">
             <span className="text-[28px] font-medium leading-[1.14] tracking-[-0.02em] whitespace-nowrap">
               200 +
             </span>
-            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-[82px]">
+            <p className="text-[14px] leading-[1.28] tracking-[-0.02em] text-[rgba(18,20,23,0.7)] max-w-20.5">
               Tutor nationalities
             </p>
           </div>

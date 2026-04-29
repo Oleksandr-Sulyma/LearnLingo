@@ -44,7 +44,7 @@ export default function TeacherFilters({ teachers }) {
   }, [teachers]);
 
   return (
-    <div className=" py-8 flex gap-5 relative w-full font-['Roboto',_sans-serif]">
+    <div className=" py-8 flex gap-5 relative w-full font-['Roboto',sans-serif]">
       <FilterSelect
         options={languageOptions}
         label="Languages"

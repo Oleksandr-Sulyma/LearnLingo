@@ -1,6 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useAuth } from "../../context/AuthContext";
 import { useThemeStore } from "../../store/useThemeStore";
 import Modal from "../Modal/Modal";
 import LoginForm from "../Auth/LoginForm";
@@ -33,11 +35,33 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await logout(); // виходимо з Firebase
-      clearFavorites(); // очищуємо Zustand стор
+      await logout();
+      clearFavorites();
+      toast.success("Goodbye! You have logged out.", {
+        icon: "👋",
+        style: {
+          border: "2px solid var(--brand-color)",
+          padding: "16px",
+        },
+      });
     } catch (error) {
       console.error("Logout error:", error);
+      toast.error("Failed to log out. Try again.");
     }
+  };
+
+  const handleThemeChange = (e) => {
+    const newTheme = e.target.value;
+    setTheme(newTheme);
+
+    toast(`Theme changed to ${newTheme}!`, {
+      icon: "🎨",
+      position: "top-left",
+      style: {
+        borderRadius: "50px",
+        fontSize: "14px",
+      },
+    });
   };
 
   return (
@@ -71,15 +95,15 @@ export default function Header() {
             <>
               <button
                 onClick={() => setModalType("login")}
-                className="flex items-center gap-2 text-gray-900 hover:text-[var(--brand-color)] transition-colors"
+                className="flex items-center gap-2 text-gray-900 hover:text-(--brand-color) transition-colors"
               >
                 <Icon
                   id="icon-login"
                   width="20"
                   height="20"
-                  className="text-[var(--brand-color)]"
+                  className="text-(--brand-color)"
                 />
-                <span className="group-hover:text-[var(--brand-color)] transition-colors">
+                <span className="group-hover:text-(--brand-color) transition-colors">
                   Log in
                 </span>
               </button>
@@ -102,15 +126,15 @@ export default function Header() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 text-gray-900 hover:text-[var(--brand-color)] transition-colors"
+                  className="flex items-center gap-2 text-gray-900 hover:text-(--brand-color) transition-colors"
                 >
                   <Icon
                     id="icon-logout"
                     width="20"
                     height="20"
-                    className="text-[var(--brand-color)]"
+                    className="text-(--brand-color)"
                   />
-                  <span className="group-hover:text-[var(--brand-color)] transition-colors">
+                  <span className="group-hover:text-(--brand-color) transition-colors">
                     Log out
                   </span>
                 </button>
@@ -120,7 +144,7 @@ export default function Header() {
 
           <select
             value={theme}
-            onChange={(e) => setTheme(e.target.value)}
+            onChange={handleThemeChange}
             className="bg-transparent cursor-pointer focus:outline-none text-xl ml-2"
           >
             {themeOptions.map((opt) => (
@@ -131,16 +155,17 @@ export default function Header() {
           </select>
         </div>
       </div>
-
-      {modalType && (
-        <Modal onClose={closeModal}>
-          {modalType === "login" ? (
-            <LoginForm onClose={closeModal} />
-          ) : (
-            <RegisterForm onClose={closeModal} />
-          )}
-        </Modal>
-      )}
+      <AnimatePresence>
+        {modalType && (
+          <Modal onClose={closeModal}>
+            {modalType === "login" ? (
+              <LoginForm onClose={closeModal} />
+            ) : (
+              <RegisterForm onClose={closeModal} />
+            )}
+          </Modal>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

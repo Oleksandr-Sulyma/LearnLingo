@@ -1,4 +1,6 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
 import { useFavoritesStore } from "../../store/useFavoritesStore";
 import { useAuth } from "../../context/AuthContext";
 import Modal from "../Modal/Modal";
@@ -12,7 +14,6 @@ export default function TeacherCard({ teacher }) {
   const { user } = useAuth();
   const { favorites, toggleFavorite } = useFavoritesStore();
   const isFavorite = favorites.includes(teacher.id);
-  
 
   const {
     name,
@@ -31,11 +32,20 @@ export default function TeacherCard({ teacher }) {
 
   const handleHeartClick = () => {
     if (!user) {
-      alert("This functionality is available only for authorized users");
-      // прописати setIsModalOpen(true) для входу
+      toast("Please log in to add teachers to your favorites", {
+        icon: "⚠️",
+        duration: 4000,
+        style: {
+          borderRadius: "12px",
+          background: "#fff",
+          color: "#121417",
+          border: "2px solid var(--brand-color)",
+          padding: "16px",
+          fontWeight: "500",
+        },
+      });
       return;
     }
-
     toggleFavorite(teacher.id);
   };
 
@@ -52,23 +62,23 @@ export default function TeacherCard({ teacher }) {
   );
 
   return (
-    <div className="bg-white rounded-[24px] p-6 flex gap-12 relative w-full font-['Roboto',_sans-serif]">
+    <div className="animate-fade-in bg-white rounded-3xl p-6 flex gap-12 relative w-full font-['Roboto',sans-serif]">
       <div
-        className="relative w-[120px] h-[120px] p-3 border rounded-full flex-shrink-0 flex items-center justify-center"
-        style={{ borderColor: "var(--brand-color-light)" }} 
+        className="relative w-30 h-30 p-3 border rounded-full shrink-0 flex items-center justify-center"
+        style={{ borderColor: "var(--brand-color-light)" }}
       >
         <img
           src={avatar_url}
           alt={`${name} ${surname}`}
-          className="w-[96px] h-[96px] rounded-full object-cover"
+          className="w-24 h-24 rounded-full object-cover"
         />
-        <div className="absolute top-[18px] right-[18px] w-3 h-3 bg-[#38CD3E] border-2 border-white rounded-full"></div>
+        <div className="absolute top-4.5 right-4.5 w-3 h-3 bg-[#38CD3E] border-2 border-white rounded-full"></div>
       </div>
 
       <div className="flex-1">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <p className="text-[#8A8A89] font-medium text-[16px] leading-[1.5] mb-2">
+            <p className="text-[#8A8A89] font-medium text-[16px] leading-normal mb-2">
               Languages
             </p>
             <h2 className="text-[24px] font-medium leading-none text-[#121417]">
@@ -109,7 +119,7 @@ export default function TeacherCard({ teacher }) {
             <button
               type="button"
               onClick={handleHeartClick}
-              className="flex-shrink-0 hover:scale-110 transition-transform focus:outline-none"
+              className="shrink-0 hover:scale-110 transition-transform focus:outline-none"
             >
               <Icon
                 id="icon-heart"
@@ -117,7 +127,7 @@ export default function TeacherCard({ teacher }) {
                 height="26"
                 className={`transition-all duration-200 ${
                   isFavorite
-                    ? "fill-[var(--brand-color)] stroke-[var(--brand-color)]"
+                    ? "fill-(--brand-color) stroke-(--brand-color)"
                     : "fill-none stroke-[#121417]"
                 }`}
               />
@@ -125,7 +135,7 @@ export default function TeacherCard({ teacher }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 mt-8 mb-4 text-[16px] font-medium leading-[1.5] text-[#121417]">
+        <div className="flex flex-col gap-2 mt-8 mb-4 text-[16px] font-medium leading-normal text-[#121417]">
           <p>
             <span className="text-[#8A8A89]">Speaks:</span>{" "}
             <span className="underline decoration-1 underline-offset-2">
@@ -144,7 +154,7 @@ export default function TeacherCard({ teacher }) {
         {!isExpanded && (
           <button
             onClick={() => setIsExpanded(true)}
-            className="text-[16px] font-medium leading-[1.5] text-[#121417] underline mt-4 mb-8 transition-colors hover:text-[var(--brand-color)]"
+            className="text-[16px] font-medium leading-normal text-[#121417] underline mt-4 mb-8 transition-colors hover:text-(--brand-color)"
           >
             Read more
           </button>
@@ -152,7 +162,7 @@ export default function TeacherCard({ teacher }) {
 
         {isExpanded && (
           <div className="mt-4 animate-fade-in">
-            <p className="text-[16px] leading-[1.5] text-[#121417] mb-8 font-normal">
+            <p className="text-[16px] leading-normal text-[#121417] mb-8 font-normal">
               {experience}
             </p>
 
@@ -183,7 +193,7 @@ export default function TeacherCard({ teacher }) {
                       </div>
                     </div>
                   </div>
-                  <p className="text-[16px] font-medium leading-[1.5] text-[#121417]">
+                  <p className="text-[16px] font-medium leading-normal text-[#121417]">
                     {review.comment}
                   </p>
                 </div>
@@ -216,19 +226,20 @@ export default function TeacherCard({ teacher }) {
               btnText="Book trial lesson"
               width="232px"
               height="60px"
-              bg="bg-[var(--brand-color)]" 
+              bg="bg-[var(--brand-color)]"
               className="text-[18px] font-bold transition-opacity hover:opacity-90"
               onClick={openModal}
             />
           </div>
         )}
       </div>
-
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          <BookingForm teacher={teacher} onClose={closeModal} />
-        </Modal>
-      )}
+      <AnimatePresence>
+        {isModalOpen && (
+          <Modal onClose={closeModal} maxWidth="599px">
+            <BookingForm teacher={teacher} onClose={closeModal} />
+          </Modal>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
