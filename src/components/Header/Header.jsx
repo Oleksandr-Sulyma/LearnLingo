@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { useThemeStore } from "../../store/useThemeStore";
@@ -18,15 +18,20 @@ export default function Header() {
   const { theme, setTheme } = useThemeStore();
   const { clearFavorites } = useFavoritesStore();
 
+  const [open, setOpen] = useState(false);
+  const selectRef = useRef();
+
   const closeModal = () => setModalType(null);
 
   const themeOptions = [
-    { value: "yellow", label: "🟡" },
-    { value: "blue", label: "🔵" },
-    { value: "green", label: "🟢" },
-    { value: "pink", label: "🌸" },
-    { value: "orange", label: "🟠" },
-  ];
+  { value: "yellow", label: "Yellow" },      
+  { value: "green", label: "Sage" },           
+  { value: "blue", label: "Soft Blue" },       
+  { value: "pink", label: "Rose" },       
+  { value: "orange", label: "Peach" },    
+];
+
+  const current = themeOptions.find(opt => opt.value === theme);
 
   const navLinkStyles = ({ isActive }) =>
     `transition-colors hover:text-[var(--brand-color)] ${
@@ -50,11 +55,10 @@ export default function Header() {
     }
   };
 
-  const handleThemeChange = (e) => {
-    const newTheme = e.target.value;
-    setTheme(newTheme);
+  const handleThemeChange = (value) => {
+    setTheme(value);
 
-    toast(`Theme changed to ${newTheme}!`, {
+    toast(`Theme changed to ${value}!`, {
       icon: "🎨",
       position: "top-left",
       style: {
@@ -63,6 +67,17 @@ export default function Header() {
       },
     });
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (selectRef.current && !selectRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <header className="py-5">
@@ -142,19 +157,46 @@ export default function Header() {
             </div>
           )}
 
-          <select
-            value={theme}
-            onChange={handleThemeChange}
-            className="bg-transparent cursor-pointer focus:outline-none text-xl ml-2"
-          >
-            {themeOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div ref={selectRef} className="relative ml-2">
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-2 px-3 py-1 border rounded-md bg-white"
+            >
+              <span
+                className="w-4 h-4 rounded-full"
+                style={{
+                  backgroundColor: `var(--color-brand-${theme})`,
+                }}
+              />
+              {current.label}
+            </button>
+
+            {open && (
+              <div className="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-md z-10">
+                {themeOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      handleThemeChange(opt.value);
+                      setOpen(false);
+                    }}
+                    className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100"
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full"
+                      style={{
+                        backgroundColor: `var(--color-brand-${opt.value})`,
+                      }}
+                    />
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
       <AnimatePresence>
         {modalType && (
           <Modal onClose={closeModal}>
