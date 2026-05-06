@@ -31,7 +31,8 @@ export default function Header() {
   { value: "orange", label: "Peach" },    
 ];
 
-  const current = themeOptions.find(opt => opt.value === theme);
+  const current = themeOptions.find(opt => opt.value === theme) 
+  || themeOptions[0];
 
   const navLinkStyles = ({ isActive }) =>
     `transition-colors hover:text-[var(--brand-color)] ${
@@ -55,18 +56,18 @@ export default function Header() {
     }
   };
 
-  const handleThemeChange = (value) => {
-    setTheme(value);
+ const handleThemeChange = (opt) => {
+  setTheme(opt.value);
 
-    toast(`Theme changed to ${value}!`, {
-      icon: "🎨",
-      position: "top-left",
-      style: {
-        borderRadius: "50px",
-        fontSize: "14px",
-      },
-    });
-  };
+  toast(`Theme changed to ${opt.label}!`, {
+    icon: "🎨",
+    position: "top-left",
+    style: {
+      borderRadius: "50px",
+      fontSize: "14px",
+    },
+  });
+};
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -177,7 +178,7 @@ export default function Header() {
                   <button
                     key={opt.value}
                     onClick={() => {
-                      handleThemeChange(opt.value);
+                      handleThemeChange(opt);
                       setOpen(false);
                     }}
                     className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100"
