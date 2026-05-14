@@ -93,7 +93,7 @@ export default function RegisterForm({ onClose }) {
             className={`w-full h-13.5 border rounded-3 px-4.5 outline-none transition-colors ${
               errors.name
                 ? "border-red-500"
-                : "border-[rgba(18,23,23,0.1)] focus:border-brand-yellow"
+                : "border-[rgba(18,23,23,0.1)] focus:border-(--brand-color)"
             }`}
           />
           {errors.name && (
@@ -109,7 +109,7 @@ export default function RegisterForm({ onClose }) {
             className={`w-full h-13.5 border rounded-3 px-4.5 outline-none transition-colors ${
               errors.email
                 ? "border-red-500"
-                : "border-[rgba(18,23,23,0.1)] focus:border-brand-yellow"
+                : "border-[rgba(18,23,23,0.1)] focus:border-(--brand-color)"
             }`}
           />
           {errors.email && (
@@ -126,7 +126,7 @@ export default function RegisterForm({ onClose }) {
               className={`w-full h-13.5 border rounded-3 px-4.5 outline-none transition-colors ${
                 errors.password
                   ? "border-red-500"
-                  : "border-[rgba(18,23,23,0.1)] focus:border-brand-yellow"
+                  : "border-[rgba(18,23,23,0.1)] focus:border-(--brand-color)"
               }`}
             />
             <button
@@ -151,7 +151,7 @@ export default function RegisterForm({ onClose }) {
           btnText="Sign Up"
           width="438px"
           height="60px"
-          bg="bg-brand-yellow"
+          bg="bg-(--brand-color)"
           className="mt-5.5 text-[18px] font-bold leading-[1.55]"
         />
       </form>
